@@ -1,5 +1,7 @@
+import {ID} from './common'
+
 export interface User {
-  _id?: string
+  _id?: ID
   employeeId: string
   firstName: string
   lastName: string
