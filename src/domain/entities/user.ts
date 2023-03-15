@@ -2,7 +2,7 @@ import {ID} from './common'
 
 export interface User {
   _id?: ID
-  employeeId: string
+  registration: string
   firstName: string
   lastName: string
   password: string

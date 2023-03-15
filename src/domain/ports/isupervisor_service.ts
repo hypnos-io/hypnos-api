@@ -1,7 +1,7 @@
 import {ID} from '../entities/common'
 import {Supervisor} from '../entities/supervisor'
 
-export type OptionalSupervisor = Supervisor | undefined
+export type OptionalSupervisor = Supervisor | undefined | null
 
 export interface ISupervisorService {
   create(newSupervisor: Supervisor): Promise<OptionalSupervisor>

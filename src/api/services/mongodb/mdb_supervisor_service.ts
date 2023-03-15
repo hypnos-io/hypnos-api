@@ -1,12 +1,28 @@
+import mongoose, {Schema} from 'mongoose'
 import {DB_URL} from '../../../constants'
 import {ID} from '../../../domain/entities/common'
 import {Supervisor} from '../../../domain/entities/supervisor'
-import {User} from '../../../domain/entities/user'
 import {
   ISupervisorService,
   OptionalSupervisor,
 } from '../../../domain/ports/isupervisor_service'
 import {Connection} from '../connection'
+
+const SupervisorSchema = new Schema<Supervisor>(
+  {
+    registration: String,
+    admissionDate: Date,
+    firstName: String,
+    lastName: String,
+    password: String,
+  },
+  {timestamps: true}
+)
+
+const SupervisorModel = mongoose.model<Supervisor>(
+  'Supervisors',
+  SupervisorSchema
+)
 
 export class MongoDBSupervisorService implements ISupervisorService {
   constructor(private readonly connection: Connection) {}
@@ -17,26 +33,31 @@ export class MongoDBSupervisorService implements ISupervisorService {
     if (!isConnected) throw new Error('DB not connected')
   }
 
-  async fetchAll(): Promise<User[]> {
-    return []
+  async fetchAll(): Promise<Supervisor[]> {
+    await this.connect()
+    return SupervisorModel.find({})
   }
 
   async findById(id: ID): Promise<OptionalSupervisor> {
-    throw new Error('Method not implemented.')
+    await this.connect()
+    return SupervisorModel.findOne({_id: id})
   }
 
   async update(
     id: ID,
-    newSupervisor: Partial<User>
+    newSupervisor: Partial<Supervisor>
   ): Promise<OptionalSupervisor> {
-    throw new Error('Method not implemented.')
+    await this.connect()
+    return SupervisorModel.findOneAndUpdate({_id: id}, newSupervisor)
   }
 
   async deleteById(id: ID): Promise<void> {
-    throw new Error('Method not implemented.')
+    await this.connect()
+    await SupervisorModel.deleteOne({_id: id})
   }
 
   async create(newSupervisor: Supervisor): Promise<OptionalSupervisor> {
-    throw new Error('Method not implemented.')
+    await this.connect()
+    return SupervisorModel.create(newSupervisor)
   }
 }
