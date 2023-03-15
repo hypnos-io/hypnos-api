@@ -12,6 +12,6 @@ app.get('/', (req, resp) => {
   })
 });
 
-app.listen(PORT); 
+app.listen(PORT);
 
 export default app;
