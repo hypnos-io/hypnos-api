@@ -16,9 +16,8 @@ io.on("connection", (socket: any) => {
     console.log(`${socket.id} is connected.`);
 
     // Evento de recebimento de imagens
-    socket.on("images", (images: any) => {
+    socket.on("sendFrame", (data: any) => {
         console.log(`Imagens recebidas de ${socket.id}`);
-        
         // Evento emit que envia uma resposta ao socket cliente que recebeu as imagens com sucesso
         socket.emit("server_response", 'Imagens recebidas com sucesso');
 
