@@ -4,6 +4,8 @@ export class FindById {
   constructor(private readonly employeeService: IEmployeeService) {}
 
   async execute(supervisorId: string, id: string) {
-    return this.employeeService.findById(supervisorId, id)
+    const foundEmployee = await this.employeeService.findById(supervisorId, id)
+    if (!foundEmployee) throw new Error('Employee not found.')
+    return foundEmployee
   }
 }

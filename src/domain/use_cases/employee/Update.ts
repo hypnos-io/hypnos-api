@@ -9,6 +9,13 @@ export class Update {
     id: string,
     newEmployee: Partial<Employee>
   ) {
-    return this.employeeService.update(supervisorId, id, newEmployee)
+    const updatedEmployee = await this.employeeService.update(
+      supervisorId,
+      id,
+      newEmployee
+    )
+
+    if (!updatedEmployee) throw new Error('Employee not updated')
+    return updatedEmployee
   }
 }

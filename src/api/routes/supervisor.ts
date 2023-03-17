@@ -5,7 +5,9 @@ import {MongoDBSupervisorService} from '../services/mongodb/mdb_supervisor_servi
 
 export const SupervisorRoutes = Router()
 
-SupervisorRoutes.get('/supervisors', async (request, response) => {
+const PATH = '/supervisors'
+
+SupervisorRoutes.get(PATH, async (request, response) => {
   try {
     const fecthAll = new FetchAll(
       new MongoDBSupervisorService(new MongoDBConnection())
