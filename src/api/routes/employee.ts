@@ -58,7 +58,10 @@ EmmployeeRouter.delete(
         new MongoDBEmployeeService(new MongoDBConnection())
       )
       await deleteUC.execute(supervisorId, id)
-      return response.status(200)
+      return response.status(200).json({
+        message: `${id} deleted successfully`,
+        time: new Date(),
+      })
     } catch (error: any) {
       return response.status(400).json({
         message: error?.message || 'Error on delete an employee.',

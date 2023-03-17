@@ -1,8 +1,10 @@
 import * as dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
+import {EmmployeeRouter} from './api/routes/employee'
 import {SupervisorRoutes} from './api/routes/supervisor'
 import {VERSIONAPI} from './constants'
-dotenv.config()
 
 const app = express()
 app.use(express.json())
@@ -16,4 +18,5 @@ app.get('/', (req, resp) => {
 })
 
 app.use(SupervisorRoutes)
+app.use(EmmployeeRouter)
 app.listen(PORT)

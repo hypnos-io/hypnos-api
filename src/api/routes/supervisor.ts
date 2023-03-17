@@ -1,7 +1,7 @@
 import {Request, Router} from 'express'
 import {Supervisor} from '../../domain/entities/supervisor'
 import {Create} from '../../domain/use_cases/supervisor/Create'
-import {Delete} from '../../domain/use_cases/supervisor/Delete'
+import {DeleteById} from '../../domain/use_cases/supervisor/Delete'
 import {FetchAll} from '../../domain/use_cases/supervisor/FetchAll'
 import {FindById} from '../../domain/use_cases/supervisor/FindById'
 import {Update} from '../../domain/use_cases/supervisor/Update'
@@ -51,11 +51,14 @@ SupervisorRoutes.delete(
   async (request: Request<{id: string}>, response) => {
     const {id} = request.params
     try {
-      const deleteUC = new Delete(
+      const deleteUC = new DeleteById(
         new MongoDBSupervisorService(new MongoDBConnection())
       )
       await deleteUC.execute(id)
-      return response.status(200)
+      return response.status(200).json({
+        message: `${id} deleted successfully`,
+        time: new Date(),
+      })
     } catch (error: any) {
       return response.status(400).json({
         message: error?.message || 'Error on delete a supervisor',
