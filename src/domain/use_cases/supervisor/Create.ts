@@ -6,6 +6,7 @@ export class Create {
 
   async execute(newSupervisor: Supervisor) {
     const createdSupervisor = await this.supervisorService.create(newSupervisor)
+    if (!createdSupervisor) throw new Error('Supervisor not created.')
     return createdSupervisor
   }
 }

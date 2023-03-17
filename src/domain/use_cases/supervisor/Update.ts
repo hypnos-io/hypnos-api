@@ -10,8 +10,7 @@ export class Update {
       id,
       newSupervisor
     )
-    if (updatedSupervisor === undefined)
-      throw new Error(`User not updated with id ${id}`)
+    if (!updatedSupervisor) throw new Error(`User not updated with id ${id}`)
     return updatedSupervisor
   }
 }

@@ -6,8 +6,7 @@ export class FindById {
 
   async execute(id: ID) {
     const foundSupervisor = await this.supervisorService.findById(id)
-    if (foundSupervisor === undefined)
-      throw new Error(`User not found with id ${id}`)
+    if (!foundSupervisor) throw new Error(`User not found with id ${id}`)
     return foundSupervisor
   }
 }

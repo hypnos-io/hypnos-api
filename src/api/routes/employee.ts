@@ -1,7 +1,10 @@
 import {Request, Router} from 'express'
 import {Employee} from '../../domain/entities/employee'
 import {Create} from '../../domain/use_cases/employee/Create'
+import {DeleteById} from '../../domain/use_cases/employee/DeleteById'
 import {FetchAll} from '../../domain/use_cases/employee/FetchAll'
+import {FindById} from '../../domain/use_cases/employee/FindById'
+import {Update} from '../../domain/use_cases/employee/Update'
 import {MongoDBConnection} from '../services/mongodb/mdb_connection'
 import {MongoDBEmployeeService} from '../services/mongodb/mdb_employee_service'
 
@@ -27,12 +30,81 @@ EmmployeeRouter.get(
   }
 )
 
+EmmployeeRouter.get(
+  `${PATH}/:id`,
+  async (request: Request<{supervisorId: string; id: string}>, response) => {
+    const {supervisorId, id} = request.params
+    try {
+      const findByIdUC = new FindById(
+        new MongoDBEmployeeService(new MongoDBConnection())
+      )
+      const foundEmployee = await findByIdUC.execute(supervisorId, id)
+      return response.json(foundEmployee)
+    } catch (error: any) {
+      return response.status(400).json({
+        message: error?.message || 'User not found.',
+        date: new Date(),
+      })
+    }
+  }
+)
+
+EmmployeeRouter.delete(
+  `${PATH}/:id`,
+  async (request: Request<{supervisorId: string; id: string}>, response) => {
+    const {supervisorId, id} = request.params
+    try {
+      const deleteUC = new DeleteById(
+        new MongoDBEmployeeService(new MongoDBConnection())
+      )
+      await deleteUC.execute(supervisorId, id)
+      return response.status(200)
+    } catch (error: any) {
+      return response.status(400).json({
+        message: error?.message || 'Error on delete an employee.',
+        date: new Date(),
+      })
+    }
+  }
+)
+
+EmmployeeRouter.patch(
+  `${PATH}/:id`,
+  async (
+    request: Request<
+      {supervisorId: string; id: string},
+      unknown,
+      Partial<Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>>
+    >,
+    response
+  ) => {
+    const {supervisorId, id} = request.params
+    const newEmployee = request.body
+    try {
+      const updateUC = new Update(
+        new MongoDBEmployeeService(new MongoDBConnection())
+      )
+      const updatedEmployee = await updateUC.execute(
+        supervisorId,
+        id,
+        newEmployee
+      )
+      return response.json(updatedEmployee)
+    } catch (error: any) {
+      return response.status(400).json({
+        message: error?.message || 'Error on update an employee',
+        date: new Date(),
+      })
+    }
+  }
+)
+
 EmmployeeRouter.post(
   PATH,
   async (
     request: Request<
       {supervisorId: string},
-      {},
+      unknown,
       Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>
     >,
     response
@@ -47,7 +119,7 @@ EmmployeeRouter.post(
       return response.json(createdEmployee)
     } catch (error: any) {
       return response.status(400).json({
-        message: error?.message || 'Users not found.',
+        message: error?.message || 'Error on create an employee',
         date: new Date(),
       })
     }
