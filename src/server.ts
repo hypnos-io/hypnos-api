@@ -1,6 +1,10 @@
 const app = require("./index");
 const { Server } = require("socket.io");
 const http = require("http");
+let imageData = "";
+
+let client1: { emit: (arg0: string, arg1: string) => void; } | null = null;
+let client2 = null;
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -11,19 +15,23 @@ const io = new Server(server, {
     maxHttpBufferSize: 1e8,
 });
 
-// Evento referente a conexão de um socket cliente com o servidor socket
+// This event refers to the connections between hypnos and the two clients
 io.on("connection", (socket: any) => {
     console.log(`${socket.id} is connected.`);
 
-    // Evento de recebimento de imagens
+    // This function is getting the images from the front end application and sending them to drowsy api
     socket.on("sendFrame", (data: any) => {
         console.log(`Imagens recebidas de ${socket.id}`);
-        // Evento emit que envia uma resposta ao socket cliente que recebeu as imagens com sucesso
-        socket.emit("server_response", 'Imagens recebidas com sucesso');
-
-        // TODO - criar emit que enviará para a DrowsyAPI
+        
+        io.emit("server_to_drowsy", data);
     });
+    
+    // This function is used to get the status of the worker face from drowsy api
+    socket.on("Status", (response: any) => {
+        console.log(response)
+    });
+
 });
 
-// Servidor socket estará escutando a porta 3001
+// listening 3001 port
 server.listen(3001);
