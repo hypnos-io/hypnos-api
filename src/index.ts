@@ -7,7 +7,7 @@ import {serve, setup} from 'swagger-ui-express'
 import {EmmployeeRouter} from './api/routes/employee'
 import {SupervisorRoutes} from './api/routes/supervisor'
 import {VERSIONAPI} from './constants'
-import {createWebsocketServer, useSocket} from './websocket'
+import {createWebsocketServer, useWebsocketEvents} from './websocket'
 
 import swaggerJson from './swagger.json'
 
@@ -28,5 +28,5 @@ app.use(SupervisorRoutes)
 app.use(EmmployeeRouter)
 
 const {io, server} = createWebsocketServer(app)
-useSocket(io)
+useWebsocketEvents(io)
 server.listen(PORT)
