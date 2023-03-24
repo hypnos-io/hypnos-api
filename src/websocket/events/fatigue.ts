@@ -1,22 +1,19 @@
 import {Server} from 'socket.io'
+import {FatigueStatus} from '../../domain/entities/fatigue'
 
-interface SocketDataRequest {
+type Image = string
+
+interface SocketData {
   id: string
-  images: string[]
+  employeeId: string
 }
 
-interface ImageStatus {
-  kssScale: number
-  detection: {
-    mouth: Record<string, string | number>
-    eyes: Record<string, string | number>
-    head: Record<string, string | number>
-  }
+interface SocketDataRequest extends SocketData {
+  images: Image[]
 }
 
-interface SocketDataResponse {
-  id: string
-  imageStatus: ImageStatus
+interface SocketDataResponse extends SocketData {
+  imageStatus: FatigueStatus
 }
 
 // This function is getting the images from the front end application and sending them to drowsy api

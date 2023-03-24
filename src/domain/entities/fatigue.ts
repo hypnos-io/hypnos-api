@@ -7,10 +7,13 @@ export interface FatigueDetectionInfo {
   head: Record<string, string | number>
 }
 
-export interface Fatigue {
-  _id?: ID
+export interface FatigueStatus {
   kssScale: number
   detection: FatigueDetectionInfo
+}
+
+export interface Fatigue extends FatigueStatus {
+  _id?: ID
   employee?: Employee
   createdAt?: Date
   updatedAt?: Date
