@@ -1,12 +1,16 @@
 import mongoose, {Schema} from 'mongoose'
 import {DB_URL} from '../../../constants'
-import {Fatigue} from '../../../domain/entities/fatigue'
+import {Fatigue, KssScaleEnum} from '../../../domain/entities/fatigue'
 import {IFatigueService} from '../../../domain/ports/ifatigue_service'
 import {Connection} from '../connection'
 
 const FatigueSchema = new Schema<Fatigue>(
   {
-    kssScale: Number,
+    kssScale: {
+      type: Number,
+      default: KssScaleEnum.EXTREMELY_ALERT,
+      enum: Object.values(KssScaleEnum),
+    },
     detection: Schema.Types.Mixed,
     employee: {type: Schema.Types.ObjectId, ref: 'Employees'},
   },
