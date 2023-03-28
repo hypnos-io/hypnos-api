@@ -5,6 +5,87 @@
     "description": "API Express para detecção de fadiga em postos de trabalho",
     "version": "1.0"
   },
+  "definitions": {
+    "Supervisor": {
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "registration": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "admissionDate": {
+          "type": "string",
+          "example": "12-01-2003"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "12-01-2003"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "12-01-2003"
+        }
+      },
+      "required": [
+        "registration",
+        "firstName",
+        "lastName",
+        "password",
+        "admissionDate"
+      ]
+    }
+  },
   "basePath": "/",
-  "paths": {}
+  "paths": {
+    "/supervisors": {
+      "get": {
+        "tags": ["Supervisor"],
+        "summary": "Retorna uma lista de supervisores",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Lista de supervisores cadastrados",
+            "schema": {
+              "type": "array",
+              "$ref": "#/definitions/Supervisor"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Cadastra um novo supervisor",
+        "produces": ["application/json"],
+        "tags": ["Supervisor"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "supervisor",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Supervisor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário cadastrado com sucesso",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Supervisor"
+            }
+          }
+        }
+      }
+    }
+  }
 }
