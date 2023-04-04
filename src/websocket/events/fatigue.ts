@@ -30,6 +30,7 @@ export function processImage(io: Server, data: SocketDataRequest) {
 export function notifyStatus(io: Server, response: SocketDataResponse) {
   const {queue} = getFatigueQueue()
   createFatigueBullMQ(queue, response)
-  io.to(response.id).emit('notify-status', response)
-  io.to(response.workstation).emit('notify-status', response)
+  io.emit('notify-status', response)
+  // io.to(`user:${response.id}`).emit('notify-status', response)
+  // io.to(`workstation:${response.workstation}`).emit('notify-status', response)
 }

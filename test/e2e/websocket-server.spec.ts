@@ -2,29 +2,31 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import express from 'express'
-import {Server, Socket} from 'socket.io'
+import {Server as HTTPServer} from 'http'
+import {Server} from 'socket.io'
 import {io as clientio, Socket as ClientSocket} from 'socket.io-client'
 import {createWebsocketServer, useWebsocketEvents} from '../../src/websocket'
-import {SocketDataRequest} from '../../src/websocket/events/fatigue'
+import {
+  SocketDataRequest,
+  SocketDataResponse,
+} from '../../src/websocket/events/fatigue'
+
 describe('WebsocketServer (e2e)', () => {
   const PORT = 3000
   let io: Server
+  let websocketServer: HTTPServer
   let clientSocketFrontend: ClientSocket
   let clientSocketDrowsy: ClientSocket
-  let serverSocket: Socket
 
   beforeAll((done) => {
     const app = express()
     const {io: sockio, server} = createWebsocketServer(app)
     io = sockio
+    websocketServer = server
     useWebsocketEvents(io)
     server.listen(PORT, () => {
       clientSocketFrontend = clientio(`http://localhost:${PORT}`)
       clientSocketDrowsy = clientio(`http://localhost:${PORT}`)
-      io.on('connection', (socket) => {
-        serverSocket = socket
-      })
-      // clientSocketFrontend.on('connect', done)
       clientSocketFrontend.on('connect', () => {
         clientSocketDrowsy.on('connect', done)
       })
@@ -36,12 +38,13 @@ describe('WebsocketServer (e2e)', () => {
       expect(message).toBe('hello')
       done()
     })
-    serverSocket.emit('test', 'hello')
+    io.emit('test', 'hello')
   })
 
-  it('Should be pass image to drowsy api', (done) => {
+  it('Should pass images to drowsy api', (done) => {
+    const id = '01'
     const data: SocketDataRequest = {
-      id: '01',
+      id,
       employeeId: '01',
       workstation: 'F1',
       images: ['imagedata'],
@@ -53,8 +56,31 @@ describe('WebsocketServer (e2e)', () => {
     clientSocketFrontend.emit('process-image', data)
   })
 
+  it('Should notify frontend with drowsy api response', (done) => {
+    const id = '01'
+    const data: SocketDataResponse = {
+      id,
+      employeeId: '001',
+      workstation: '001',
+      imageStatus: {
+        detection: {
+          eyes: {},
+          mouth: {},
+          head: {},
+        },
+        kssScale: 6,
+      },
+    }
+    clientSocketFrontend.on('notify-status', (response: SocketDataResponse) => {
+      expect(response).toEqual(data)
+      done()
+    })
+    clientSocketDrowsy.emit('notify-status', data)
+  })
+
   afterAll(() => {
     io.close()
+    websocketServer.close()
     clientSocketFrontend.close()
     clientSocketDrowsy.close()
   })
