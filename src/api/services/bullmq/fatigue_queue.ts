@@ -14,6 +14,22 @@ const connection: QueueOptions = {
     password: REDIS_PASSWORD,
   },
 }
+export const fatigueQueue = new Queue(QUEUE_NAME, connection)
+export let fatigueWorker: Worker<SocketDataResponse>
+
+async function setupFatigueWorker() {
+  fatigueWorker = new Worker<SocketDataResponse>(
+    QUEUE_NAME,
+    async (job) => {
+      await onFatigueJob(job.data)
+      return 'DONE'
+    },
+    connection
+  )
+  fatigueWorker.on('completed', () =>
+    console.log('[BullMQ] Ocorrência de fadiga cadastrada com sucesso!')
+  )
+}
 
 async function onFatigueJob(response: SocketDataResponse) {
   const createFatigueUC = new Create(
@@ -22,19 +38,8 @@ async function onFatigueJob(response: SocketDataResponse) {
   return createFatigueUC.execute(response.imageStatus, response.employeeId)
 }
 
-export function getFatigueQueue() {
-  const queue = new Queue(QUEUE_NAME, connection)
-  const worker = new Worker<SocketDataResponse>(
-    QUEUE_NAME,
-    (job) => onFatigueJob(job.data),
-    connection
-  )
-  return {queue, worker}
+export async function createFatigueBullMQ(response: SocketDataResponse) {
+  await fatigueQueue.add(QUEUE_NAME, response)
 }
 
-export async function createFatigueBullMQ(
-  queue: Queue,
-  response: SocketDataResponse
-) {
-  return queue.add(QUEUE_NAME, response)
-}
+setupFatigueWorker()

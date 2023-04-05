@@ -33,7 +33,7 @@ describe('WebsocketServer (e2e)', () => {
     })
   })
 
-  it('Should be receive the message successfully', (done) => {
+  test('Should be receive the message successfully', (done) => {
     clientSocketFrontend.on('test', (message) => {
       expect(message).toBe('hello')
       done()
@@ -41,7 +41,7 @@ describe('WebsocketServer (e2e)', () => {
     io.emit('test', 'hello')
   })
 
-  it('Should pass images to drowsy api', (done) => {
+  test('Should pass images to drowsy api', (done) => {
     const id = '01'
     const data: SocketDataRequest = {
       id,
@@ -56,11 +56,11 @@ describe('WebsocketServer (e2e)', () => {
     clientSocketFrontend.emit('process-image', data)
   })
 
-  it('Should notify frontend with drowsy api response', (done) => {
+  test('Should notify frontend with drowsy api response (private event)', (done) => {
     const id = '01'
     const data: SocketDataResponse = {
       id,
-      employeeId: '001',
+      employeeId: '6414fae6e7b86cadff2554af',
       workstation: '001',
       imageStatus: {
         detection: {
@@ -68,13 +68,41 @@ describe('WebsocketServer (e2e)', () => {
           mouth: {},
           head: {},
         },
-        kssScale: 6,
+        kssScale: 7,
       },
     }
-    clientSocketFrontend.on('notify-status', (response: SocketDataResponse) => {
-      expect(response).toEqual(data)
-      done()
-    })
+    clientSocketFrontend.on(
+      `notify-status:user-${id}`,
+      (response: SocketDataResponse) => {
+        expect(response).toEqual(data)
+        done()
+      }
+    )
+    clientSocketDrowsy.emit('notify-status', data)
+  })
+
+  test('Should notify frontend with drowsy api response (workstation event)', (done) => {
+    const workstation = '001'
+    const data: SocketDataResponse = {
+      id: '01',
+      employeeId: '6414fae6e7b86cadff2554af',
+      workstation,
+      imageStatus: {
+        detection: {
+          eyes: {},
+          mouth: {},
+          head: {},
+        },
+        kssScale: 7,
+      },
+    }
+    clientSocketFrontend.on(
+      `notify-status:workstation-${workstation}`,
+      (response: SocketDataResponse) => {
+        expect(response).toEqual(data)
+        done()
+      }
+    )
     clientSocketDrowsy.emit('notify-status', data)
   })
 

@@ -6,7 +6,10 @@ export class Create {
   constructor(private readonly fatigueService: IFatigueService) {}
 
   async execute(newFatigue: Fatigue, employeeId: ID) {
-    if (newFatigue.kssScale >= KssScaleEnum.SLEEPY_BUT_NOT_EFFORT_TO_KEEP_ALERT)
+    if (
+      newFatigue.kssScale >= KssScaleEnum.SLEEPY_BUT_NOT_EFFORT_TO_KEEP_ALERT
+    ) {
       return this.fatigueService.create(newFatigue, employeeId)
+    }
   }
 }

@@ -1,8 +1,5 @@
 import {Server} from 'socket.io'
-import {
-  createFatigueBullMQ,
-  getFatigueQueue,
-} from '../../api/services/bullmq/fatigue_queue'
+import {createFatigueBullMQ} from '../../api/services/bullmq/fatigue_queue'
 import {FatigueStatus} from '../../domain/entities/fatigue'
 
 type Image = string
@@ -27,10 +24,8 @@ export function processImage(io: Server, data: SocketDataRequest) {
 }
 
 // This function is used to get the status of the worker face from drowsy api
-export function notifyStatus(io: Server, response: SocketDataResponse) {
-  const {queue} = getFatigueQueue()
-  createFatigueBullMQ(queue, response)
-  io.emit('notify-status', response)
-  // io.to(`user:${response.id}`).emit('notify-status', response)
-  // io.to(`workstation:${response.workstation}`).emit('notify-status', response)
+export async function notifyStatus(io: Server, response: SocketDataResponse) {
+  await createFatigueBullMQ(response)
+  io.emit(`notify-status:user-${response.id}`, response)
+  io.emit(`notify-status:workstation-${response.workstation}`, response)
 }
