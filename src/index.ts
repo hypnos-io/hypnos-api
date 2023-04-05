@@ -1,27 +1,32 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+import cors from 'cors'
 import express from 'express'
-import "./server";
+import {serve, setup} from 'swagger-ui-express'
 import {EmmployeeRouter} from './api/routes/employee'
 import {SupervisorRoutes} from './api/routes/supervisor'
 import {VERSIONAPI} from './constants'
-const cors = require('cors');
+import {createWebsocketServer, useWebsocketEvents} from './websocket'
 
-const app = express()
+import swaggerJson from './swagger.json'
+
+export const app = express()
 app.use(express.json())
+app.use(cors())
 const PORT = 3000
 
-app.use(cors());
 app.get('/', (req, resp) => {
   return resp.json({
     hello: 'hypnos',
     version: VERSIONAPI,
   })
-});
+})
 
-app.use(SupervisorRoutes);
-app.use(EmmployeeRouter);
-app.listen(PORT);
+app.use('/apidocs', serve, setup(swaggerJson))
+app.use(SupervisorRoutes)
+app.use(EmmployeeRouter)
 
-export default app;
+const {io, server} = createWebsocketServer(app)
+useWebsocketEvents(io)
+server.listen(PORT)

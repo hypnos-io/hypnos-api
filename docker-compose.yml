@@ -1,0 +1,7 @@
+version: '3.0'
+services:
+  redis:
+    image: redis
+    command: redis-server --requirepass rediscallidus2023
+    ports:
+      - '6379:6379'
