@@ -9,7 +9,11 @@ export class Create {
     if (
       newFatigue.kssScale >= KssScaleEnum.SLEEPY_BUT_NOT_EFFORT_TO_KEEP_ALERT
     ) {
-      return this.fatigueService.create(newFatigue, employeeId)
+      const createdFatigue = await this.fatigueService.create(
+        newFatigue,
+        employeeId
+      )
+      return createdFatigue
     }
   }
 }

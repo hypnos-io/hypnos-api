@@ -9,7 +9,7 @@ const FatigueSchema = new Schema<Fatigue>(
     kssScale: {
       type: Number,
       default: KssScaleEnum.EXTREMELY_ALERT,
-      enum: Object.values(KssScaleEnum),
+      enum: KssScaleEnum,
     },
     detection: Schema.Types.Mixed,
     employee: {type: Schema.Types.ObjectId, ref: 'Employees'},
@@ -17,7 +17,7 @@ const FatigueSchema = new Schema<Fatigue>(
   {timestamps: true}
 )
 
-const FatigueModel = mongoose.model('Fatigues', FatigueSchema)
+const FatigueModel = mongoose.model<Fatigue>('Fatigues', FatigueSchema)
 
 export class MongoDBFatigueService implements IFatigueService {
   constructor(private readonly connection: Connection) {}
