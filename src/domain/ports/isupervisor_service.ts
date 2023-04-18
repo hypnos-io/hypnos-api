@@ -3,9 +3,11 @@ import {Supervisor} from '../entities/supervisor'
 
 export type OptionalSupervisor = Supervisor | undefined | null
 
+export type SupervisorFilter = Partial<Omit<Supervisor, '_id'>>
+
 export interface ISupervisorService {
   create(newSupervisor: Supervisor): Promise<OptionalSupervisor>
-  fetchAll(): Promise<Supervisor[]>
+  fetchAll(filter: SupervisorFilter): Promise<Supervisor[]>
   findById(id: ID): Promise<OptionalSupervisor>
   update(
     id: ID,

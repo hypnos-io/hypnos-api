@@ -1,3 +1,3 @@
 import {User} from './user'
 
-export type Supervisor = User
+export interface Supervisor extends User {}

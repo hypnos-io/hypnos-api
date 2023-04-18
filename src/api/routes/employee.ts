@@ -8,10 +8,10 @@ import {Update} from '../../domain/use_cases/employee/Update'
 import {MongoDBConnection} from '../services/mongodb/mdb_connection'
 import {MongoDBEmployeeService} from '../services/mongodb/mdb_employee_service'
 
-export const EmmployeeRouter = Router()
+export const EmployeeRouter = Router()
 const PATH = '/supervisors/:supervisorId/employees'
 
-EmmployeeRouter.get(
+EmployeeRouter.get(
   PATH,
   async (request: Request<{supervisorId: string}>, response) => {
     const {supervisorId} = request.params
@@ -30,7 +30,7 @@ EmmployeeRouter.get(
   }
 )
 
-EmmployeeRouter.get(
+EmployeeRouter.get(
   `${PATH}/:id`,
   async (request: Request<{supervisorId: string; id: string}>, response) => {
     const {supervisorId, id} = request.params
@@ -49,7 +49,7 @@ EmmployeeRouter.get(
   }
 )
 
-EmmployeeRouter.delete(
+EmployeeRouter.delete(
   `${PATH}/:id`,
   async (request: Request<{supervisorId: string; id: string}>, response) => {
     const {supervisorId, id} = request.params
@@ -71,7 +71,7 @@ EmmployeeRouter.delete(
   }
 )
 
-EmmployeeRouter.patch(
+EmployeeRouter.patch(
   `${PATH}/:id`,
   async (
     request: Request<
@@ -102,7 +102,7 @@ EmmployeeRouter.patch(
   }
 )
 
-EmmployeeRouter.post(
+EmployeeRouter.post(
   PATH,
   async (
     request: Request<

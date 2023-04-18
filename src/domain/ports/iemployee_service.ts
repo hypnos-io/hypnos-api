@@ -3,9 +3,11 @@ import {Employee} from '../entities/employee'
 
 export type OptionalEmployee = Employee | undefined | null
 
+export type EmployeeFilter = Partial<Omit<Employee, '_id' | 'supervisor'>>
+
 export interface IEmployeeService {
   create(newEmployee: Employee, supervisorId: ID): Promise<OptionalEmployee>
-  fetchAll(supervisorId: ID): Promise<Employee[]>
+  fetchAll(supervisorId: ID, filters: EmployeeFilter): Promise<Employee[]>
   findById(supervisorId: ID, id: ID): Promise<OptionalEmployee>
   update(
     supervisorId: ID,

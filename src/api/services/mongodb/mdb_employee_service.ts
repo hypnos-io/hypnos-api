@@ -2,6 +2,7 @@ import mongoose, {Schema} from 'mongoose'
 import {DB_URL} from '../../../constants'
 import {Employee} from '../../../domain/entities/employee'
 import {
+  EmployeeFilter,
   IEmployeeService,
   OptionalEmployee,
 } from '../../../domain/ports/iemployee_service'
@@ -43,9 +44,14 @@ export class MongoDBEmployeeService implements IEmployeeService {
     return createdEmployee
   }
 
-  async fetchAll(supervisorId: string): Promise<Employee[]> {
+  async fetchAll(
+    supervisorId: string,
+    filters: EmployeeFilter
+  ): Promise<Employee[]> {
     await this.connect()
-    return EmployeeModel.find({supervisor: supervisorId}).populate('supervisor')
+    return EmployeeModel.find({supervisor: supervisorId, ...filters}).populate(
+      'supervisor'
+    )
   }
 
   async findById(supervisorId: string, id: string): Promise<OptionalEmployee> {

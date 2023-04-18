@@ -5,6 +5,7 @@ import {Supervisor} from '../../../domain/entities/supervisor'
 import {
   ISupervisorService,
   OptionalSupervisor,
+  SupervisorFilter,
 } from '../../../domain/ports/isupervisor_service'
 import {Connection} from '../connection'
 
@@ -33,9 +34,9 @@ export class MongoDBSupervisorService implements ISupervisorService {
     if (!isConnected) throw new Error('DB not connected')
   }
 
-  async fetchAll(): Promise<Supervisor[]> {
+  async fetchAll(filter: SupervisorFilter): Promise<Supervisor[]> {
     await this.connect()
-    return SupervisorModel.find({})
+    return SupervisorModel.find(filter)
   }
 
   async findById(id: ID): Promise<OptionalSupervisor> {
