@@ -7,6 +7,7 @@ import {
   LeaderFilter,
   OptionalLeader,
 } from '../../../domain/ports/ileader_service'
+import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
 
 const LeaderSchema = new Schema<Leader>(
@@ -16,6 +17,11 @@ const LeaderSchema = new Schema<Leader>(
     firstName: String,
     lastName: String,
     password: String,
+    role: {
+      enum: RolesEnum,
+      type: Number,
+      default: RolesEnum.EMPLOYEE,
+    },
   },
   {timestamps: true}
 )

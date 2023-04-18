@@ -6,6 +6,7 @@ import {
   IEmployeeService,
   OptionalEmployee,
 } from '../../../domain/ports/iemployee_service'
+import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
 
 const EmployeeSchema = new Schema<Employee>(
@@ -17,6 +18,11 @@ const EmployeeSchema = new Schema<Employee>(
     registration: String,
     workstation: Number,
     supervisor: {type: Schema.Types.ObjectId, ref: 'Supervisors'},
+    role: {
+      enum: RolesEnum,
+      type: Number,
+      default: RolesEnum.EMPLOYEE,
+    },
   },
   {timestamps: true}
 )

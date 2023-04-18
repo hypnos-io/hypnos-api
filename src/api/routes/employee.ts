@@ -1,5 +1,5 @@
 import {Request, Router} from 'express'
-import {Employee} from '../../domain/entities/employee'
+import {EmployeeRequest} from '../../domain/entities/employee'
 import {Create} from '../../domain/use_cases/employee/Create'
 import {DeleteById} from '../../domain/use_cases/employee/DeleteById'
 import {FetchAll} from '../../domain/use_cases/employee/FetchAll'
@@ -77,7 +77,7 @@ EmployeeRouter.patch(
     request: Request<
       {supervisorId: string; id: string},
       unknown,
-      Partial<Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>>
+      Partial<EmployeeRequest>
     >,
     response
   ) => {
@@ -105,11 +105,7 @@ EmployeeRouter.patch(
 EmployeeRouter.post(
   PATH,
   async (
-    request: Request<
-      {supervisorId: string},
-      unknown,
-      Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>
-    >,
+    request: Request<{supervisorId: string}, unknown, EmployeeRequest>,
     response
   ) => {
     const {supervisorId} = request.params

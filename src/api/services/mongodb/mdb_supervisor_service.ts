@@ -7,6 +7,7 @@ import {
   OptionalSupervisor,
   SupervisorFilter,
 } from '../../../domain/ports/isupervisor_service'
+import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
 
 const SupervisorSchema = new Schema<Supervisor>(
@@ -16,6 +17,11 @@ const SupervisorSchema = new Schema<Supervisor>(
     firstName: String,
     lastName: String,
     password: String,
+    role: {
+      enum: RolesEnum,
+      type: Number,
+      default: RolesEnum.EMPLOYEE,
+    },
   },
   {timestamps: true}
 )

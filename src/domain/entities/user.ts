@@ -1,3 +1,4 @@
+import {RolesEnum} from '../use_cases/authorization/roles'
 import {ID} from './common'
 
 export interface User {
@@ -7,6 +8,7 @@ export interface User {
   lastName: string
   password: string
   admissionDate: Date
+  role: RolesEnum
   createdAt?: Date
   updatedAt?: Date
 }
