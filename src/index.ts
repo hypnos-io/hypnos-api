@@ -10,6 +10,7 @@ import {VERSIONAPI} from './constants'
 import {createWebsocketServer, useWebsocketEvents} from './websocket'
 
 import {authRequired} from './api/middlewares/auth'
+import {LeaderRoutes} from './api/routes/leader'
 import {UserRoutes} from './api/routes/user'
 import swaggerJson from './swagger.json'
 
@@ -25,8 +26,9 @@ app.get('/', (req, resp) => {
   })
 })
 
-app.use('/apidocs', serve, setup(swaggerJson))
+app.use('/swagger', serve, setup(swaggerJson))
 app.use(UserRoutes)
+app.use(authRequired, LeaderRoutes)
 app.use(authRequired, SupervisorRoutes)
 app.use(authRequired, EmployeeRouter)
 
