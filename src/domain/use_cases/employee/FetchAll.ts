@@ -4,6 +4,6 @@ export class FetchAll {
   constructor(private readonly employeeService: IEmployeeService) {}
 
   async execute(supervisorId: string) {
-    return this.employeeService.fetchAll(supervisorId)
+    return this.employeeService.fetchAll(supervisorId, {})
   }
 }

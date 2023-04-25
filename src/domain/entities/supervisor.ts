@@ -1,3 +1,8 @@
 import {User} from './user'
 
-export type Supervisor = User
+export interface Supervisor extends User {}
+
+export type SupervisorRequest = Omit<
+  Supervisor,
+  '_id' | 'createdAt' | 'updatedAt' | 'role'
+>

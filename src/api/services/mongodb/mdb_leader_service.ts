@@ -1,16 +1,16 @@
 import mongoose, {Schema} from 'mongoose'
 import {DB_URL} from '../../../constants'
 import {ID} from '../../../domain/entities/common'
-import {Supervisor} from '../../../domain/entities/supervisor'
+import {Leader} from '../../../domain/entities/leader'
 import {
-  ISupervisorService,
-  OptionalSupervisor,
-  SupervisorFilter,
-} from '../../../domain/ports/isupervisor_service'
+  ILeaderService,
+  LeaderFilter,
+  OptionalLeader,
+} from '../../../domain/ports/ileader_service'
 import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
 
-const SupervisorSchema = new Schema<Supervisor>(
+const LeaderSchema = new Schema<Leader>(
   {
     registration: String,
     admissionDate: Date,
@@ -26,12 +26,9 @@ const SupervisorSchema = new Schema<Supervisor>(
   {timestamps: true}
 )
 
-const SupervisorModel = mongoose.model<Supervisor>(
-  'Supervisors',
-  SupervisorSchema
-)
+const LeaderModel = mongoose.model<Leader>('Leaders', LeaderSchema)
 
-export class MongoDBSupervisorService implements ISupervisorService {
+export class MongoDBLeaderService implements ILeaderService {
   constructor(private readonly connection: Connection) {}
 
   async connect(): Promise<void> {
@@ -40,31 +37,28 @@ export class MongoDBSupervisorService implements ISupervisorService {
     if (!isConnected) throw new Error('DB not connected')
   }
 
-  async fetchAll(filter: SupervisorFilter): Promise<Supervisor[]> {
+  async fetchAll(filter: LeaderFilter): Promise<Leader[]> {
     await this.connect()
-    return SupervisorModel.find(filter)
+    return LeaderModel.find(filter)
   }
 
-  async findById(id: ID): Promise<OptionalSupervisor> {
+  async findById(id: ID): Promise<OptionalLeader> {
     await this.connect()
-    return SupervisorModel.findOne({_id: id})
+    return LeaderModel.findOne({_id: id})
   }
 
-  async update(
-    id: ID,
-    newSupervisor: Partial<Supervisor>
-  ): Promise<OptionalSupervisor> {
+  async update(id: ID, newLeader: Partial<Leader>): Promise<OptionalLeader> {
     await this.connect()
-    return SupervisorModel.findOneAndUpdate({_id: id}, newSupervisor)
+    return LeaderModel.findOneAndUpdate({_id: id}, newLeader)
   }
 
   async deleteById(id: ID): Promise<void> {
     await this.connect()
-    await SupervisorModel.deleteOne({_id: id})
+    await LeaderModel.deleteOne({_id: id})
   }
 
-  async create(newSupervisor: Supervisor): Promise<OptionalSupervisor> {
+  async create(newLeader: Leader): Promise<OptionalLeader> {
     await this.connect()
-    return SupervisorModel.create(newSupervisor)
+    return LeaderModel.create(newLeader)
   }
 }

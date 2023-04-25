@@ -1,5 +1,5 @@
 import {Request, Router} from 'express'
-import {Supervisor} from '../../domain/entities/supervisor'
+import {SupervisorRequest} from '../../domain/entities/supervisor'
 import {Create} from '../../domain/use_cases/supervisor/Create'
 import {DeleteById} from '../../domain/use_cases/supervisor/Delete'
 import {FetchAll} from '../../domain/use_cases/supervisor/FetchAll'
@@ -70,14 +70,7 @@ SupervisorRoutes.delete(
 
 SupervisorRoutes.post(
   PATH,
-  async (
-    request: Request<
-      unknown,
-      unknown,
-      Omit<Supervisor, 'id' | 'createdAt' | 'updatedAt'>
-    >,
-    response
-  ) => {
+  async (request: Request<unknown, unknown, SupervisorRequest>, response) => {
     const newSupervisor = request.body
     try {
       const createUC = new Create(
@@ -97,11 +90,7 @@ SupervisorRoutes.post(
 SupervisorRoutes.patch(
   `${PATH}/:id`,
   async (
-    request: Request<
-      {id: string},
-      unknown,
-      Partial<Omit<Supervisor, 'id' | 'createdAt' | 'updatedAt'>>
-    >,
+    request: Request<{id: string}, unknown, Partial<SupervisorRequest>>,
     response
   ) => {
     const {id} = request.params

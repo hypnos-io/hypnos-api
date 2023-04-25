@@ -2,9 +2,11 @@ import mongoose, {Schema} from 'mongoose'
 import {DB_URL} from '../../../constants'
 import {Employee} from '../../../domain/entities/employee'
 import {
+  EmployeeFilter,
   IEmployeeService,
   OptionalEmployee,
 } from '../../../domain/ports/iemployee_service'
+import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
 
 const EmployeeSchema = new Schema<Employee>(
@@ -16,6 +18,11 @@ const EmployeeSchema = new Schema<Employee>(
     registration: String,
     workstation: Number,
     supervisor: {type: Schema.Types.ObjectId, ref: 'Supervisors'},
+    role: {
+      enum: RolesEnum,
+      type: Number,
+      default: RolesEnum.EMPLOYEE,
+    },
   },
   {timestamps: true}
 )
@@ -43,9 +50,14 @@ export class MongoDBEmployeeService implements IEmployeeService {
     return createdEmployee
   }
 
-  async fetchAll(supervisorId: string): Promise<Employee[]> {
+  async fetchAll(
+    supervisorId: string,
+    filters: EmployeeFilter
+  ): Promise<Employee[]> {
     await this.connect()
-    return EmployeeModel.find({supervisor: supervisorId}).populate('supervisor')
+    return EmployeeModel.find({supervisor: supervisorId, ...filters}).populate(
+      'supervisor'
+    )
   }
 
   async findById(supervisorId: string, id: string): Promise<OptionalEmployee> {

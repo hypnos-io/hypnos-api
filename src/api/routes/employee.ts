@@ -1,5 +1,5 @@
 import {Request, Router} from 'express'
-import {Employee} from '../../domain/entities/employee'
+import {EmployeeRequest} from '../../domain/entities/employee'
 import {Create} from '../../domain/use_cases/employee/Create'
 import {DeleteById} from '../../domain/use_cases/employee/DeleteById'
 import {FetchAll} from '../../domain/use_cases/employee/FetchAll'
@@ -8,10 +8,10 @@ import {Update} from '../../domain/use_cases/employee/Update'
 import {MongoDBConnection} from '../services/mongodb/mdb_connection'
 import {MongoDBEmployeeService} from '../services/mongodb/mdb_employee_service'
 
-export const EmmployeeRouter = Router()
+export const EmployeeRouter = Router()
 const PATH = '/supervisors/:supervisorId/employees'
 
-EmmployeeRouter.get(
+EmployeeRouter.get(
   PATH,
   async (request: Request<{supervisorId: string}>, response) => {
     const {supervisorId} = request.params
@@ -30,7 +30,7 @@ EmmployeeRouter.get(
   }
 )
 
-EmmployeeRouter.get(
+EmployeeRouter.get(
   `${PATH}/:id`,
   async (request: Request<{supervisorId: string; id: string}>, response) => {
     const {supervisorId, id} = request.params
@@ -49,7 +49,7 @@ EmmployeeRouter.get(
   }
 )
 
-EmmployeeRouter.delete(
+EmployeeRouter.delete(
   `${PATH}/:id`,
   async (request: Request<{supervisorId: string; id: string}>, response) => {
     const {supervisorId, id} = request.params
@@ -71,13 +71,13 @@ EmmployeeRouter.delete(
   }
 )
 
-EmmployeeRouter.patch(
+EmployeeRouter.patch(
   `${PATH}/:id`,
   async (
     request: Request<
       {supervisorId: string; id: string},
       unknown,
-      Partial<Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>>
+      Partial<EmployeeRequest>
     >,
     response
   ) => {
@@ -102,14 +102,10 @@ EmmployeeRouter.patch(
   }
 )
 
-EmmployeeRouter.post(
+EmployeeRouter.post(
   PATH,
   async (
-    request: Request<
-      {supervisorId: string},
-      unknown,
-      Omit<Employee, 'id' | 'createdAt' | 'updatedAt'>
-    >,
+    request: Request<{supervisorId: string}, unknown, EmployeeRequest>,
     response
   ) => {
     const {supervisorId} = request.params
