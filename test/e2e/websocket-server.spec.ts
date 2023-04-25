@@ -45,6 +45,7 @@ describe('WebsocketServer (e2e)', () => {
     const id = '01'
     const data: SocketDataRequest = {
       id,
+      fps: 10,
       employeeId: '01',
       workstation: 'F1',
       images: ['imagedata'],
@@ -62,6 +63,7 @@ describe('WebsocketServer (e2e)', () => {
       id,
       employeeId: '6414fae6e7b86cadff2554af',
       workstation: '001',
+      fps: 10,
       imageStatus: {
         detection: {
           eyes: {},
@@ -87,6 +89,7 @@ describe('WebsocketServer (e2e)', () => {
       id: '01',
       employeeId: '6414fae6e7b86cadff2554af',
       workstation,
+      fps: 10,
       imageStatus: {
         detection: {
           eyes: {},
