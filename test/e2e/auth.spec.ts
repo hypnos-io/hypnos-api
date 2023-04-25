@@ -7,6 +7,7 @@ import {UserRoutes} from '../../src/api/routes/user'
 import {MongoDBConnection} from '../../src/api/services/mongodb/mdb_connection'
 import {MongoDBLeaderService} from '../../src/api/services/mongodb/mdb_leader_service'
 import {Create} from '../../src/domain/use_cases/leader/Create'
+import {generateMockName} from '../utils/mock'
 
 describe('Authentication (e2e)', () => {
   let app: express.Express
@@ -21,8 +22,8 @@ describe('Authentication (e2e)', () => {
     const createUC = new Create(
       new MongoDBLeaderService(new MongoDBConnection())
     )
-    const registration = 'MAT12345'
-    const password = 'TESTE1234'
+    const registration = generateMockName('MAT')
+    const password = generateMockName('PASS')
 
     const createdLeader = await createUC.execute({
       registration,
@@ -34,8 +35,9 @@ describe('Authentication (e2e)', () => {
 
     const response = await request(app)
       .post('/login')
+      .set('Accept', 'application/json')
       .send({registration, password})
-    expect(response.body['_id']).toBe(createdLeader._id)
+    expect(response.body['_id']).toBe(createdLeader._id?.toString())
     expect(response.statusCode).toBe(200)
   })
 })
