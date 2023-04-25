@@ -29,7 +29,7 @@ UserRoutes.post(
       return response
         .cookie('Authorization', userAuthenticated._id)
         .status(200)
-        .json()
+        .json(userAuthenticated)
     } catch (error: any) {
       return response.status(400).json({
         message: error.message || 'Credenciais inváliadas',

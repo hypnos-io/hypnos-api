@@ -10,7 +10,7 @@ export class Create {
       ...newLeader,
       role: RolesEnum.LEADER,
     })
-    if (!createdLeader) throw new Error('Supervisor not created.')
+    if (!createdLeader) throw new Error('Leader not created.')
     return createdLeader
   }
 }
