@@ -8,6 +8,7 @@ interface SocketData {
   id: string
   employeeId: string
   workstation: string
+  fps: number
 }
 
 export interface SocketDataRequest extends SocketData {
