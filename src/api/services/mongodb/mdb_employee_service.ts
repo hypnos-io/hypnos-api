@@ -16,7 +16,6 @@ const EmployeeSchema = new Schema<Employee>(
     lastName: String,
     password: String,
     registration: String,
-    workstation: Number,
     supervisor: {type: Schema.Types.ObjectId, ref: 'Supervisors'},
     role: {
       enum: RolesEnum,
