@@ -9,7 +9,8 @@ export interface IWorkstationService {
   create(newWorkstation: Workstation): Promise<OptionalWorkstation>
   update(
     id: ID,
-    newWorkstation: Partial<Workstation>
+    newWorkstation: Partial<Workstation>,
+    employeeId?: ID
   ): Promise<OptionalWorkstation>
   fetchAll(filter: WorkstationFilter): Promise<Workstation[]>
   findById(id: ID): Promise<OptionalWorkstation>

@@ -22,17 +22,18 @@ const WorkstationModel = mongoose.model<Workstation>(
   WorkstationSchema
 )
 
-export class MongoDBWorkstationSerice implements IWorkstationService {
+export class MongoDBWorkstationService implements IWorkstationService {
   constructor(private readonly connection: Connection) {}
 
   async update(
     id: string,
-    newWorkstation: Partial<Workstation>
+    newWorkstation: Partial<Workstation>,
+    employeeId?: string
   ): Promise<OptionalWorkstation> {
     await this.connect()
-    const updatedWorkstation = await WorkstationModel.findByIdAndUpdate(
-      id,
-      newWorkstation
+    const updatedWorkstation = await WorkstationModel.findOneAndUpdate(
+      {_id: id},
+      {employee: employeeId, ...newWorkstation}
     ).populate('employee')
     return updatedWorkstation
   }
