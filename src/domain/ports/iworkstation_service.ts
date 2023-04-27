@@ -3,7 +3,7 @@ import {Workstation} from '../entities/workstation'
 
 export type OptionalWorkstation = Workstation | undefined | null
 
-export type WorkstationFilter = Partial<Omit<Workstation, '_id'>>
+export type WorkstationFilter = Partial<Omit<Workstation, '_id' | 'employee'>>
 
 export interface IWorkstationService {
   create(newWorkstation: Workstation): Promise<OptionalWorkstation>
