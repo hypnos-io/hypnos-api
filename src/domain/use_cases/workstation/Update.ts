@@ -7,14 +7,17 @@ export class Update {
 
   async execute(
     id: ID,
+    sectorId: ID,
     newWorkstation: Partial<Workstation> & {employeeId?: ID}
   ) {
     const updatedWorkstation = await this.workstationService.update(
       id,
+      sectorId,
       newWorkstation,
       newWorkstation.employeeId
     )
-    if (!updatedWorkstation) throw new Error(`User not updated with id ${id}`)
+    if (!updatedWorkstation)
+      throw new Error(`Workstation not updated with id ${id}`)
     return updatedWorkstation
   }
 }
