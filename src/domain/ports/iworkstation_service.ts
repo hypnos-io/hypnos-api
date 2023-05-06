@@ -6,13 +6,17 @@ export type OptionalWorkstation = Workstation | undefined | null
 export type WorkstationFilter = Partial<Omit<Workstation, '_id' | 'employee'>>
 
 export interface IWorkstationService {
-  create(newWorkstation: Workstation): Promise<OptionalWorkstation>
+  create(
+    newWorkstation: Workstation,
+    sectorId: ID
+  ): Promise<OptionalWorkstation>
   update(
     id: ID,
+    sectorId: ID,
     newWorkstation: Partial<Workstation>,
     employeeId?: ID
   ): Promise<OptionalWorkstation>
-  fetchAll(filter: WorkstationFilter): Promise<Workstation[]>
-  findById(id: ID): Promise<OptionalWorkstation>
-  deleteById(id: ID): Promise<void>
+  fetchAll(sectorId: ID, filter: WorkstationFilter): Promise<Workstation[]>
+  findById(id: ID, sectorId: ID): Promise<OptionalWorkstation>
+  deleteById(id: ID, sectorId: ID): Promise<void>
 }

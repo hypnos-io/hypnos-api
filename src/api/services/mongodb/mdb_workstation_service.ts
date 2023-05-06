@@ -13,6 +13,7 @@ const WorkstationSchema = new Schema<Workstation>(
     cameraId: String,
     value: String,
     employee: {type: Schema.Types.ObjectId, ref: 'Employees'},
+    sector: {type: Schema.Types.ObjectId, ref: 'Sectors'},
   },
   {timestamps: true}
 )
@@ -27,6 +28,7 @@ export class MongoDBWorkstationService implements IWorkstationService {
 
   async update(
     id: string,
+    sectorId: string,
     newWorkstation: Partial<Workstation>,
     employeeId?: string
   ): Promise<OptionalWorkstation> {
@@ -44,7 +46,10 @@ export class MongoDBWorkstationService implements IWorkstationService {
     if (!isConnected) throw new Error('DB not connected')
   }
 
-  async create(newWorkstation: Workstation): Promise<Workstation> {
+  async create(
+    newWorkstation: Workstation,
+    sectorId: string
+  ): Promise<Workstation> {
     await this.connect()
     const createdWorkstation = await WorkstationModel.create({
       ...newWorkstation,
@@ -52,17 +57,23 @@ export class MongoDBWorkstationService implements IWorkstationService {
     return createdWorkstation
   }
 
-  async findById(id: string): Promise<Workstation | null | undefined> {
+  async findById(
+    id: string,
+    sectorId: string
+  ): Promise<Workstation | null | undefined> {
     await this.connect()
     return WorkstationModel.findOne({_id: id}).populate('employee')
   }
 
-  async fetchAll(filters: WorkstationFilter): Promise<Workstation[]> {
+  async fetchAll(
+    sectorId: string,
+    filters: WorkstationFilter
+  ): Promise<Workstation[]> {
     await this.connect()
     return WorkstationModel.find(filters).populate('employee')
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: string, sectorId: string): Promise<void> {
     await this.connect()
     await WorkstationModel.deleteOne({_id: id})
   }

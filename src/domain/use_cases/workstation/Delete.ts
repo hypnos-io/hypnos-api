@@ -4,7 +4,7 @@ import {IWorkstationService} from '../../ports/iworkstation_service'
 export class DeleteById {
   constructor(private readonly workstationService: IWorkstationService) {}
 
-  async execute(id: ID) {
-    await this.workstationService.deleteById(id)
+  async execute(id: ID, sectorId: ID) {
+    await this.workstationService.deleteById(id, sectorId)
   }
 }
