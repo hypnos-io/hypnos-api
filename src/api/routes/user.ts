@@ -1,4 +1,5 @@
 import {Request, Router} from 'express'
+import {GetAuthenticatedUser} from '../../domain/use_cases/user/GetAuthenticatedUser'
 import {Login} from '../../domain/use_cases/user/Login'
 import {MongoDBConnection} from '../services/mongodb/mdb_connection'
 import {MongoDBLeaderService} from '../services/mongodb/mdb_leader_service'
@@ -41,6 +42,23 @@ UserRoutes.post(
 UserRoutes.post('/logout', async (request, response) => {
   try {
     return response.clearCookie('Authorization').status(200).json()
+  } catch (error: any) {
+    return response.status(400).json({
+      message: error.message || 'Credenciais inváliadas',
+    })
+  }
+})
+
+UserRoutes.get('/authenticated', async (request, response) => {
+  const userId = request.cookies['Authorization']
+  const mongoConnection = new MongoDBConnection()
+  const getAuthenticatedUserUC = new GetAuthenticatedUser(
+    new MongoDBSupervisorService(mongoConnection),
+    new MongoDBLeaderService(mongoConnection)
+  )
+  try {
+    const foundUser = await getAuthenticatedUserUC.execute(userId)
+    return response.status(200).json(foundUser)
   } catch (error: any) {
     return response.status(400).json({
       message: error.message || 'Credenciais inváliadas',
