@@ -47,3 +47,14 @@ UserRoutes.post('/logout', async (request, response) => {
     })
   }
 })
+
+UserRoutes.get('/authenticated', async (request, response) => {
+  const userId = request.cookies['Authorization']
+  try {
+    return response.clearCookie('Authorization').status(200).json()
+  } catch (error: any) {
+    return response.status(400).json({
+      message: error.message || 'Credenciais inváliadas',
+    })
+  }
+})

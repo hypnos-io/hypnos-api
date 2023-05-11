@@ -16,7 +16,6 @@ const EmployeeSchema = new Schema<Employee>(
     lastName: String,
     password: String,
     registration: String,
-    supervisor: {type: Schema.Types.ObjectId, ref: 'Supervisors'},
     role: {
       enum: RolesEnum,
       type: Number,
@@ -37,50 +36,38 @@ export class MongoDBEmployeeService implements IEmployeeService {
     if (!isConnected) throw new Error('DB not connected')
   }
 
-  async create(
-    newEmployee: Employee,
-    supervisorId: string
-  ): Promise<OptionalEmployee> {
+  async create(newEmployee: Employee): Promise<OptionalEmployee> {
     await this.connect()
     const createdEmployee = await EmployeeModel.create({
       ...newEmployee,
-      supervisor: supervisorId,
     })
     return createdEmployee
   }
 
-  async fetchAll(
-    supervisorId: string,
-    filters: EmployeeFilter
-  ): Promise<Employee[]> {
+  async fetchAll(filters: EmployeeFilter): Promise<Employee[]> {
     await this.connect()
-    return EmployeeModel.find({supervisor: supervisorId, ...filters}).populate(
-      'supervisor'
-    )
+    return EmployeeModel.find({...filters})
   }
 
-  async findById(supervisorId: string, id: string): Promise<OptionalEmployee> {
+  async findById(id: string): Promise<OptionalEmployee> {
     await this.connect()
-    return EmployeeModel.findOne({supervisor: supervisorId, _id: id}).populate(
-      'supervisor'
-    )
+    return EmployeeModel.findOne({_id: id})
   }
 
   async update(
-    supervisorId: string,
     id: string,
     newEmployee: Partial<Employee>
   ): Promise<OptionalEmployee> {
     await this.connect()
     const updatedEmployee = await EmployeeModel.findOneAndUpdate(
-      {supervisor: supervisorId, _id: id},
+      {_id: id},
       newEmployee
-    ).populate('supervisor')
+    )
     return updatedEmployee
   }
 
-  async deleteById(supervisorId: string, id: string): Promise<void> {
+  async deleteById(id: string): Promise<void> {
     await this.connect()
-    await EmployeeModel.findOneAndDelete({supervisor: supervisorId, _id: id})
+    await EmployeeModel.findOneAndDelete({_id: id})
   }
 }
