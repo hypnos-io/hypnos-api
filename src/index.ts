@@ -9,7 +9,9 @@ import {SupervisorRoutes} from './api/routes/supervisor'
 import {VERSIONAPI} from './constants'
 import {createWebsocketServer, useWebsocketEvents} from './websocket'
 
+import {JobRouter} from './api/routes/job'
 import {LeaderRoutes} from './api/routes/leader'
+import {ProcessRouter} from './api/routes/process'
 import {UserRoutes} from './api/routes/user'
 import {WorkstationRoutes} from './api/routes/workstation'
 import swaggerJson from './swagger.json'
@@ -32,6 +34,8 @@ app.use(LeaderRoutes)
 app.use(SupervisorRoutes)
 app.use(EmployeeRouter)
 app.use(WorkstationRoutes)
+app.use(ProcessRouter)
+app.use(JobRouter)
 
 const {io, server} = createWebsocketServer(app)
 useWebsocketEvents(io)
