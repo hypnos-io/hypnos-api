@@ -12,6 +12,7 @@ import {createWebsocketServer, useWebsocketEvents} from './websocket'
 import {JobRouter} from './api/routes/job'
 import {LeaderRoutes} from './api/routes/leader'
 import {ProcessRouter} from './api/routes/process'
+import {SectorRoutes} from './api/routes/sectors'
 import {UserRoutes} from './api/routes/user'
 import {WorkstationRoutes} from './api/routes/workstation'
 import swaggerJson from './swagger.json'
@@ -34,6 +35,7 @@ app.use(LeaderRoutes)
 app.use(SupervisorRoutes)
 app.use(EmployeeRouter)
 app.use(WorkstationRoutes)
+app.use(SectorRoutes)
 app.use(ProcessRouter)
 app.use(JobRouter)
 
