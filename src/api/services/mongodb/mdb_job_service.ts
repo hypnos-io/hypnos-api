@@ -8,6 +8,7 @@ import {Connection} from '../connection'
 const JobSchema = new Schema<Job>(
   {
     name: String,
+    process: {type: Schema.Types.ObjectId, ref: 'Processes'},
   },
   {timestamps: true}
 )

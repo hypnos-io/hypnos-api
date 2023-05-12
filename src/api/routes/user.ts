@@ -50,13 +50,14 @@ UserRoutes.post('/logout', async (request, response) => {
 })
 
 UserRoutes.get('/authenticated', async (request, response) => {
-  const userId = request.cookies['Authorization']
+  const {Authorization: userId} = request.cookies as {Authorization?: string}
   const mongoConnection = new MongoDBConnection()
   const getAuthenticatedUserUC = new GetAuthenticatedUser(
     new MongoDBSupervisorService(mongoConnection),
     new MongoDBLeaderService(mongoConnection)
   )
   try {
+    if (!userId) throw new Error('Usuário inválido ou não autenticado')
     const foundUser = await getAuthenticatedUserUC.execute(userId)
     return response.status(200).json(foundUser)
   } catch (error: any) {

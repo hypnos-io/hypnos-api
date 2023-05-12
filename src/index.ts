@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import {serve, setup} from 'swagger-ui-express'
@@ -20,6 +21,7 @@ import swaggerJson from './swagger.json'
 export const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 const PORT = 3000
 
 app.get('/', (req, resp) => {
