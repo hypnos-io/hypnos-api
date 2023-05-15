@@ -8,12 +8,12 @@ import {
 } from '../../../domain/ports/iemployee_service'
 import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
+import cloudinary from 'cloudinary'
 
 const EmployeeSchema = new Schema<Employee>(
   {
     admissionDate: Date,
-    firstName: String,
-    lastName: String,
+    fullName: String,
     password: String,
     registration: String,
     role: {
@@ -21,6 +21,7 @@ const EmployeeSchema = new Schema<Employee>(
       type: Number,
       default: RolesEnum.EMPLOYEE,
     },
+    profileImage: String,
   },
   {timestamps: true}
 )

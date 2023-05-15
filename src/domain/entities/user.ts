@@ -4,11 +4,11 @@ import {ID} from './common'
 export interface User {
   _id?: ID
   registration: string
-  firstName: string
-  lastName: string
+  fullName: string
   password: string
   admissionDate: Date
   role: RolesEnum
+  profileImage: string
   createdAt?: Date
   updatedAt?: Date
 }
