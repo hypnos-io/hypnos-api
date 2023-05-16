@@ -13,9 +13,7 @@ import {Connection} from '../connection'
 const LeaderSchema = new Schema<Leader>(
   {
     registration: String,
-    admissionDate: Date,
-    firstName: String,
-    lastName: String,
+    name: String,
     password: String,
     role: {
       enum: RolesEnum,
