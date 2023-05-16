@@ -30,7 +30,7 @@ UserRoutes.post(
       const userAuthenticated = await loginUC.execute(registration, password)
       return response
         .cookie(AUTH_COOKIE_NAME, userAuthenticated._id, {
-          maxAge: 50000,
+          maxAge: 24 * 60 * 60 * 1000,
           httpOnly: true,
         })
         .status(200)
