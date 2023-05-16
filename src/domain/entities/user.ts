@@ -6,7 +6,6 @@ export interface User {
   registration: string
   name: string
   password: string
-  admissionDate: Date
   role: RolesEnum
   createdAt?: Date
   updatedAt?: Date

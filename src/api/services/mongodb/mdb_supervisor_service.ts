@@ -13,7 +13,6 @@ import {Connection} from '../connection'
 const SupervisorSchema = new Schema<Supervisor>(
   {
     registration: String,
-    admissionDate: Date,
     name: String,
     password: String,
     role: {

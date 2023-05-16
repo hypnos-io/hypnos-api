@@ -46,7 +46,6 @@ describe('Authentication (e2e)', () => {
     const createdLeader = await createUC.execute({
       registration,
       password,
-      admissionDate: new Date(),
       name: 'Teste',
     })
 
