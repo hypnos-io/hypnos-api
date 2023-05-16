@@ -8,7 +8,7 @@ export interface User {
   password: string
   admissionDate: Date
   role: RolesEnum
-  profileImage: string
+  imageURL: string
   createdAt?: Date
   updatedAt?: Date
 }

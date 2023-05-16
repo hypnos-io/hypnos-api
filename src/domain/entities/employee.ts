@@ -4,5 +4,5 @@ export type Employee = User
 
 export type EmployeeRequest = Omit<
   Employee,
-  '_id' | 'createdAt' | 'updatedAt'
+  '_id' | 'createdAt' | 'updatedAt' | 'password'
 >
