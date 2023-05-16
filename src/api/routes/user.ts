@@ -6,6 +6,7 @@ import {MongoDBLeaderService} from '../services/mongodb/mdb_leader_service'
 import {MongoDBSupervisorService} from '../services/mongodb/mdb_supervisor_service'
 
 export const UserRoutes = Router()
+const AUTH_COOKIE_NAME = 'Authorization'
 
 UserRoutes.post(
   '/login',
@@ -28,7 +29,10 @@ UserRoutes.post(
       )
       const userAuthenticated = await loginUC.execute(registration, password)
       return response
-        .cookie('Authorization', userAuthenticated._id)
+        .cookie(AUTH_COOKIE_NAME, userAuthenticated._id, {
+          maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true,
+        })
         .status(200)
         .json(userAuthenticated)
     } catch (error: any) {
@@ -41,7 +45,7 @@ UserRoutes.post(
 
 UserRoutes.post('/logout', async (request, response) => {
   try {
-    return response.clearCookie('Authorization').status(200).json()
+    return response.clearCookie(AUTH_COOKIE_NAME).status(200).json()
   } catch (error: any) {
     return response.status(400).json({
       message: error.message || 'Credenciais inváliadas',
