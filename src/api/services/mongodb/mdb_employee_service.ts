@@ -12,8 +12,7 @@ import {Connection} from '../connection'
 const EmployeeSchema = new Schema<Employee>(
   {
     admissionDate: Date,
-    firstName: String,
-    lastName: String,
+    name: String,
     password: String,
     registration: String,
     role: {

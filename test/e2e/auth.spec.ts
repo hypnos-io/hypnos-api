@@ -47,8 +47,7 @@ describe('Authentication (e2e)', () => {
       registration,
       password,
       admissionDate: new Date(),
-      firstName: 'Usuário',
-      lastName: 'Teste',
+      name: 'Teste',
     })
 
     const response = await request(app)
