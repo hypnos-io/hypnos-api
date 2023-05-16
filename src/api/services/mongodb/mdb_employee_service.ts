@@ -15,7 +15,6 @@ const EmployeeSchema = new Schema<Employee>(
   {
     admissionDate: Date,
     fullName: String,
-    password: String,
     registration: String,
     role: {
       enum: RolesEnum,
@@ -75,8 +74,8 @@ export class MongoDBEmployeeService implements IEmployeeService {
       api_secret: API_SECRET_CLOUDINARY
     });
     await this.connect()
-    const item = EmployeeModel.findById({ _id: id }).lean().exec();
-    let imageId: any = (await item).imageURL;
+    const employee = EmployeeModel.findById({ _id: id }).lean().exec();
+    let imageId: any = (await employee).imageURL;
     imageId = imageId.split("/").pop().split(".")[0];
     console.log(imageId);
     if (imageId !== 'unknown_person_g3aj62')
