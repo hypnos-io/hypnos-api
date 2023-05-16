@@ -14,11 +14,12 @@ const SupervisorSchema = new Schema<Supervisor>(
   {
     registration: String,
     name: String,
+    imageURL: String,
     password: String,
     role: {
       enum: RolesEnum,
       type: Number,
-      default: RolesEnum.EMPLOYEE,
+      default: RolesEnum.SUPERVISOR,
     },
   },
   {timestamps: true}
