@@ -8,6 +8,11 @@ import {Connection} from '../connection'
 const JobSchema = new Schema<Job>(
   {
     name: String,
+    durationInHours: Number,
+    endAt: Date,
+    startAt: Date,
+    epis: [String],
+    sector: {type: Schema.Types.ObjectId, ref: 'Sectors'},
     process: {type: Schema.Types.ObjectId, ref: 'Processes'},
   },
   {timestamps: true}
