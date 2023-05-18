@@ -13,15 +13,14 @@ import { CLOUD_NAME_CLOUDINARY, API_KEY_CLOUDINARY, API_SECRET_CLOUDINARY } from
 
 const EmployeeSchema = new Schema<Employee>(
   {
-    admissionDate: Date,
-    fullName: String,
+    name: String,
+    imageURL: String,
     registration: String,
     role: {
       enum: RolesEnum,
       type: Number,
       default: RolesEnum.EMPLOYEE,
     },
-    imageURL: String,
   },
   {timestamps: true}
 )

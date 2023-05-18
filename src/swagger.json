@@ -14,18 +14,11 @@
         "registration": {
           "type": "string"
         },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
+        "name": {
           "type": "string"
         },
         "password": {
           "type": "string"
-        },
-        "admissionDate": {
-          "type": "string",
-          "example": "12-01-2003"
         },
         "createdAt": {
           "type": "string",
@@ -36,13 +29,7 @@
           "example": "12-01-2003"
         }
       },
-      "required": [
-        "registration",
-        "firstName",
-        "lastName",
-        "password",
-        "admissionDate"
-      ]
+      "required": ["registration", "name", "password"]
     }
   },
   "basePath": "/",

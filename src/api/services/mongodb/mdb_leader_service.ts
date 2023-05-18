@@ -15,15 +15,14 @@ import { CLOUD_NAME_CLOUDINARY, API_KEY_CLOUDINARY, API_SECRET_CLOUDINARY } from
 const LeaderSchema = new Schema<Leader>(
   {
     registration: String,
-    admissionDate: Date,
-    fullName: String,
+    name: String,
+    imageURL: String,
     password: String,
     role: {
       enum: RolesEnum,
       type: Number,
-      default: RolesEnum.EMPLOYEE,
+      default: RolesEnum.LEADER,
     },
-    imageURL: String
   },
   {timestamps: true}
 )

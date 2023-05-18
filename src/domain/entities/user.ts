@@ -4,9 +4,8 @@ import {ID} from './common'
 export interface User {
   _id?: ID
   registration: string
-  fullName: string
+  name: string
   password: string
-  admissionDate: Date
   role: RolesEnum
   imageURL: string
   createdAt?: Date
