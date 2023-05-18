@@ -32,6 +32,8 @@ UserRoutes.post(
         .cookie(AUTH_COOKIE_NAME, userAuthenticated._id, {
           maxAge: 24 * 60 * 60 * 1000,
           httpOnly: true,
+          sameSite: 'none',
+          secure: true,
         })
         .status(200)
         .json(userAuthenticated)
