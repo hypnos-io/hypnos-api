@@ -31,9 +31,10 @@ export class MongoDBJobService implements IJobService {
 
   async create(processId: ID, newJob: Job): Promise<OptionalJob> {
     await this.connect()
-    return (await JobModel.create({...newJob, process: processId})).populate(
-      'process'
-    )
+    return (await JobModel.create({...newJob, process: processId})).populate([
+      'process',
+      'sector',
+    ])
   }
 
   async fetchAll(
@@ -41,7 +42,10 @@ export class MongoDBJobService implements IJobService {
     filters: Partial<Omit<Job, '_id'>>
   ): Promise<Job[]> {
     await this.connect()
-    return JobModel.find({...filters, process: processId}).populate('process')
+    return JobModel.find({...filters, process: processId}).populate([
+      'process',
+      'sector',
+    ])
   }
 
   async update(
@@ -53,7 +57,7 @@ export class MongoDBJobService implements IJobService {
     return JobModel.findOneAndUpdate(
       {_id: id, process: processId},
       newJob
-    ).populate('process')
+    ).populate(['process', 'sector'])
   }
 
   async deleteById(processId: ID, id: string): Promise<OptionalJob> {
@@ -65,6 +69,9 @@ export class MongoDBJobService implements IJobService {
 
   async findById(processId: ID, id: string): Promise<OptionalJob> {
     await this.connect()
-    return JobModel.findOne({_id: id, process: processId}).populate('process')
+    return JobModel.findOne({_id: id, process: processId}).populate([
+      'process',
+      'sector',
+    ])
   }
 }

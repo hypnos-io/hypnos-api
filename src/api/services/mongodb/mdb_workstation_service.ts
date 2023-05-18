@@ -36,7 +36,7 @@ export class MongoDBWorkstationService implements IWorkstationService {
     const updatedWorkstation = await WorkstationModel.findOneAndUpdate(
       {_id: id, sector: sectorId},
       {employee: employeeId, ...newWorkstation}
-    ).populate('employee')
+    ).populate(['employee', 'sector'])
     return updatedWorkstation
   }
 
@@ -55,7 +55,7 @@ export class MongoDBWorkstationService implements IWorkstationService {
       ...newWorkstation,
       sector: sectorId,
     })
-    return createdWorkstation.populate('employee')
+    return createdWorkstation.populate(['employee', 'sector'])
   }
 
   async findById(
@@ -63,9 +63,10 @@ export class MongoDBWorkstationService implements IWorkstationService {
     sectorId: string
   ): Promise<Workstation | null | undefined> {
     await this.connect()
-    return WorkstationModel.findOne({_id: id, sector: sectorId}).populate(
-      'employee'
-    )
+    return WorkstationModel.findOne({_id: id, sector: sectorId}).populate([
+      'employee',
+      'sector',
+    ])
   }
 
   async fetchAll(
@@ -73,13 +74,17 @@ export class MongoDBWorkstationService implements IWorkstationService {
     filters: WorkstationFilter
   ): Promise<Workstation[]> {
     await this.connect()
-    return WorkstationModel.find({...filters, sector: sectorId}).populate(
-      'employee'
-    )
+    return WorkstationModel.find({...filters, sector: sectorId}).populate([
+      'employee',
+      'sector',
+    ])
   }
 
   async deleteById(id: string, sectorId: string): Promise<void> {
     await this.connect()
-    await WorkstationModel.deleteOne({_id: id, sector: sectorId})
+    await WorkstationModel.deleteOne({_id: id, sector: sectorId}).populate([
+      'employee',
+      'sector',
+    ])
   }
 }
