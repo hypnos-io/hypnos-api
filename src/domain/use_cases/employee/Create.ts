@@ -7,8 +7,7 @@ export class Create {
 
   async execute(newEmployee: EmployeeRequest) {
     const createdEmployee = await this.employeeService.create({
-      ...newEmployee,
-      role: RolesEnum.EMPLOYEE,
+      ...newEmployee
     })
     if (!createdEmployee) throw new Error('Employee not created')
     return createdEmployee

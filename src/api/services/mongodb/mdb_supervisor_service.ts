@@ -9,6 +9,8 @@ import {
 } from '../../../domain/ports/isupervisor_service'
 import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
+import cloudinary from 'cloudinary'
+import { CLOUD_NAME_CLOUDINARY, API_KEY_CLOUDINARY, API_SECRET_CLOUDINARY } from '../../../constants'
 
 const SupervisorSchema = new Schema<Supervisor>(
   {
@@ -57,9 +59,20 @@ export class MongoDBSupervisorService implements ISupervisorService {
     return SupervisorModel.findOneAndUpdate({_id: id}, newSupervisor)
   }
 
-  async deleteById(id: ID): Promise<void> {
+  async deleteById(id: string): Promise<void> {
+    cloudinary.v2.config({
+      cloud_name: CLOUD_NAME_CLOUDINARY,
+      api_key: API_KEY_CLOUDINARY,
+      api_secret: API_SECRET_CLOUDINARY
+    });
     await this.connect()
-    await SupervisorModel.deleteOne({_id: id})
+    const supervisor = SupervisorModel.findById({ _id: id }).lean().exec();
+    let imageId: any = (await supervisor).imageURL;
+    imageId = imageId.split("/").pop().split(".")[0];
+    console.log(imageId);
+    if (imageId !== 'unknown_person_g3aj62')
+      await cloudinary.v2.uploader.destroy(imageId);
+    await SupervisorModel.findOneAndDelete({_id: id})
   }
 
   async create(newSupervisor: Supervisor): Promise<OptionalSupervisor> {

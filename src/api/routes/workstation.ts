@@ -11,7 +11,7 @@ import {MongoDBWorkstationService} from '../services/mongodb/mdb_workstation_ser
 
 export const WorkstationRoutes = Router()
 
-const PATH = '/sectors/:sectorId/workstations'
+const PATH = '/workstations'
 
 WorkstationRoutes.get(
   PATH,

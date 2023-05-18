@@ -6,8 +6,8 @@ export interface User {
   registration: string
   name: string
   password: string
-  imageURL?: string
   role: RolesEnum
+  imageURL: string
   createdAt?: Date
   updatedAt?: Date
 }
