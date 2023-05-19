@@ -1,5 +1,11 @@
+import cloudinary from 'cloudinary'
 import mongoose, {Schema} from 'mongoose'
-import {DB_URL} from '../../../constants'
+import {
+  API_KEY_CLOUDINARY,
+  API_SECRET_CLOUDINARY,
+  CLOUD_NAME_CLOUDINARY,
+  DB_URL,
+} from '../../../constants'
 import {ID} from '../../../domain/entities/common'
 import {Supervisor} from '../../../domain/entities/supervisor'
 import {
@@ -9,8 +15,6 @@ import {
 } from '../../../domain/ports/isupervisor_service'
 import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
-import cloudinary from 'cloudinary'
-import { CLOUD_NAME_CLOUDINARY, API_KEY_CLOUDINARY, API_SECRET_CLOUDINARY } from '../../../constants'
 
 const SupervisorSchema = new Schema<Supervisor>(
   {
@@ -34,6 +38,13 @@ const SupervisorModel = mongoose.model<Supervisor>(
 
 export class MongoDBSupervisorService implements ISupervisorService {
   constructor(private readonly connection: Connection) {}
+
+  async findByRegistration(registration: string): Promise<OptionalSupervisor> {
+    await this.connect()
+    return SupervisorModel.findOne({
+      registration: registration,
+    })
+  }
 
   async connect(): Promise<void> {
     if (!DB_URL) throw new Error('DB URL not found.')
@@ -63,15 +74,16 @@ export class MongoDBSupervisorService implements ISupervisorService {
     cloudinary.v2.config({
       cloud_name: CLOUD_NAME_CLOUDINARY,
       api_key: API_KEY_CLOUDINARY,
-      api_secret: API_SECRET_CLOUDINARY
-    });
+      api_secret: API_SECRET_CLOUDINARY,
+    })
     await this.connect()
-    const supervisor = SupervisorModel.findById({ _id: id }).lean().exec();
-    let imageId: any = (await supervisor).imageURL;
-    imageId = imageId.split("/").pop().split(".")[0];
-    console.log(imageId);
-    if (imageId !== 'unknown_person_g3aj62')
-      await cloudinary.v2.uploader.destroy(imageId);
+    const supervisor = await SupervisorModel.findById({_id: id}).lean().exec()
+    let imageId = supervisor.imageURL
+    if (imageId) {
+      imageId = imageId.split('/').pop().split('.')[0]
+      if (imageId !== 'unknown_person_g3aj62')
+        await cloudinary.v2.uploader.destroy(imageId)
+    }
     await SupervisorModel.findOneAndDelete({_id: id})
   }
 

@@ -14,4 +14,5 @@ export interface ISupervisorService {
     newSupervisor: Partial<Supervisor>
   ): Promise<OptionalSupervisor>
   deleteById(id: ID): Promise<void>
+  findByRegistration(registration: string): Promise<OptionalSupervisor>
 }

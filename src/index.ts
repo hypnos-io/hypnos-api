@@ -7,7 +7,7 @@ import express from 'express'
 import {serve, setup} from 'swagger-ui-express'
 import {EmployeeRouter} from './api/routes/employee'
 import {SupervisorRoutes} from './api/routes/supervisor'
-import {VERSIONAPI} from './constants'
+import {FRONTEND_URL, VERSIONAPI} from './constants'
 import {createWebsocketServer, useWebsocketEvents} from './websocket'
 
 import {JobRouter} from './api/routes/job'
@@ -16,13 +16,14 @@ import {ProcessRouter} from './api/routes/process'
 import {SectorRoutes} from './api/routes/sectors'
 import {UserRoutes} from './api/routes/user'
 import {WorkstationRoutes} from './api/routes/workstation'
+import {userSeeds} from './api/seeds/user'
 import swaggerJson from './swagger.json'
 
 export const app = express()
 app.use(express.json())
 app.use(
   cors({
-    origin: true,
+    origin: FRONTEND_URL,
     credentials: true,
   })
 )
@@ -46,6 +47,8 @@ app.use(SectorRoutes)
 app.use(ProcessRouter)
 app.use(JobRouter)
 
-const {io, server} = createWebsocketServer(app)
-useWebsocketEvents(io)
-server.listen(PORT)
+userSeeds().then(() => {
+  const {io, server} = createWebsocketServer(app)
+  useWebsocketEvents(io)
+  server.listen(PORT)
+})
