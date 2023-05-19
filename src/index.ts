@@ -16,6 +16,7 @@ import {ProcessRouter} from './api/routes/process'
 import {SectorRoutes} from './api/routes/sectors'
 import {UserRoutes} from './api/routes/user'
 import {WorkstationRoutes} from './api/routes/workstation'
+import {userSeeds} from './api/seeds/user'
 import swaggerJson from './swagger.json'
 
 export const app = express()
@@ -46,6 +47,8 @@ app.use(SectorRoutes)
 app.use(ProcessRouter)
 app.use(JobRouter)
 
-const {io, server} = createWebsocketServer(app)
-useWebsocketEvents(io)
-server.listen(PORT)
+userSeeds().then(() => {
+  const {io, server} = createWebsocketServer(app)
+  useWebsocketEvents(io)
+  server.listen(PORT)
+})
