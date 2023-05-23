@@ -1,5 +1,11 @@
+import cloudinary from 'cloudinary'
 import mongoose, {Schema} from 'mongoose'
-import {DB_URL} from '../../../constants'
+import {
+  API_KEY_CLOUDINARY,
+  API_SECRET_CLOUDINARY,
+  CLOUD_NAME_CLOUDINARY,
+  DB_URL,
+} from '../../../constants'
 import {Employee} from '../../../domain/entities/employee'
 import {
   EmployeeFilter,
@@ -8,8 +14,6 @@ import {
 } from '../../../domain/ports/iemployee_service'
 import {RolesEnum} from '../../../domain/use_cases/authorization/roles'
 import {Connection} from '../connection'
-import cloudinary from 'cloudinary'
-import { CLOUD_NAME_CLOUDINARY, API_KEY_CLOUDINARY, API_SECRET_CLOUDINARY } from '../../../constants'
 
 const EmployeeSchema = new Schema<Employee>(
   {
@@ -70,16 +74,15 @@ export class MongoDBEmployeeService implements IEmployeeService {
     cloudinary.v2.config({
       cloud_name: CLOUD_NAME_CLOUDINARY,
       api_key: API_KEY_CLOUDINARY,
-      api_secret: API_SECRET_CLOUDINARY
-    });
+      api_secret: API_SECRET_CLOUDINARY,
+    })
     await this.connect()
-    const employee = EmployeeModel.findById({ _id: id }).lean().exec();
-    let imageId: any = (await employee).imageURL;
-    imageId = imageId.split("/").pop().split(".")[0];
-    console.log(imageId);
+    const employee = EmployeeModel.findById({_id: id}).lean().exec()
+    let imageId: any = (await employee).imageURL
+    imageId = imageId.split('/').pop().split('.')[0]
+    console.log(imageId)
     if (imageId !== 'unknown_person_g3aj62')
-      await cloudinary.v2.uploader.destroy(imageId);
+      await cloudinary.v2.uploader.destroy(imageId)
     await EmployeeModel.findOneAndDelete({_id: id})
   }
-
 }
