@@ -1,11 +1,13 @@
 import {Request, Router} from 'express'
 import {ID} from '../../domain/entities/common'
-import {Workstation} from '../../domain/entities/workstation'
 import {Create} from '../../domain/use_cases/workstation/Create'
 import {DeleteById} from '../../domain/use_cases/workstation/Delete'
 import {FetchAll} from '../../domain/use_cases/workstation/FetchAll'
 import {FindById} from '../../domain/use_cases/workstation/FindById'
-import {Update} from '../../domain/use_cases/workstation/Update'
+import {
+  Update,
+  WorkstationUpdateRequest,
+} from '../../domain/use_cases/workstation/Update'
 import {MongoDBConnection} from '../services/mongodb/mdb_connection'
 import {MongoDBWorkstationService} from '../services/mongodb/mdb_workstation_service'
 
@@ -105,11 +107,7 @@ WorkstationRoutes.patch(
     request: Request<
       {id: string; sectorId: ID},
       unknown,
-      Partial<
-        Omit<Workstation, '_id' | 'createdAt' | 'updatedAt' | 'employee'> & {
-          employeeId: ID
-        }
-      >,
+      WorkstationUpdateRequest,
       unknown
     >,
     response

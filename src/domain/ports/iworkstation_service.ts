@@ -1,5 +1,6 @@
 import {ID} from '../entities/common'
 import {Workstation} from '../entities/workstation'
+import {WorkstationUpdateRequest} from '../use_cases/workstation/Update'
 
 export type OptionalWorkstation = Workstation | undefined | null
 
@@ -13,10 +14,11 @@ export interface IWorkstationService {
   update(
     id: ID,
     sectorId: ID,
-    newWorkstation: Partial<Workstation>,
+    newWorkstation: WorkstationUpdateRequest,
     employeeId?: ID
   ): Promise<OptionalWorkstation>
   fetchAll(sectorId: ID, filter: WorkstationFilter): Promise<Workstation[]>
+  fetchAllByJob(sectorId: ID, jobId: ID): Promise<Workstation[]>
   findById(id: ID, sectorId: ID): Promise<OptionalWorkstation>
   deleteById(id: ID, sectorId: ID): Promise<void>
 }

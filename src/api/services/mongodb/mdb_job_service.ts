@@ -8,6 +8,7 @@ import {Connection} from '../connection'
 const JobSchema = new Schema<Job>(
   {
     name: String,
+    employeeSize: Number,
     durationInHours: Number,
     endAt: Date,
     startAt: Date,

@@ -6,12 +6,14 @@ import {
   OptionalWorkstation,
   WorkstationFilter,
 } from '../../../domain/ports/iworkstation_service'
+import {WorkstationUpdateRequest} from '../../../domain/use_cases/workstation/Update'
 import {Connection} from '../connection'
 
 const WorkstationSchema = new Schema<Workstation>(
   {
     cameraId: String,
     value: String,
+    job: {type: Schema.Types.ObjectId, ref: 'Jobs'},
     employee: {type: Schema.Types.ObjectId, ref: 'Employees'},
     sector: {type: Schema.Types.ObjectId, ref: 'Sectors'},
   },
@@ -29,14 +31,14 @@ export class MongoDBWorkstationService implements IWorkstationService {
   async update(
     id: string,
     sectorId: string,
-    newWorkstation: Partial<Workstation>,
+    newWorkstation: WorkstationUpdateRequest,
     employeeId?: string
   ): Promise<OptionalWorkstation> {
     await this.connect()
     const updatedWorkstation = await WorkstationModel.findOneAndUpdate(
       {_id: id, sector: sectorId},
-      {employee: employeeId, ...newWorkstation}
-    ).populate(['employee', 'sector'])
+      {employee: employeeId, job: newWorkstation.jobId, ...newWorkstation}
+    ).populate(['employee', 'sector', 'job'])
     return updatedWorkstation
   }
 
@@ -55,7 +57,7 @@ export class MongoDBWorkstationService implements IWorkstationService {
       ...newWorkstation,
       sector: sectorId,
     })
-    return createdWorkstation.populate(['employee', 'sector'])
+    return createdWorkstation.populate(['employee', 'sector', 'job'])
   }
 
   async findById(
@@ -66,6 +68,7 @@ export class MongoDBWorkstationService implements IWorkstationService {
     return WorkstationModel.findOne({_id: id, sector: sectorId}).populate([
       'employee',
       'sector',
+      'job',
     ])
   }
 
@@ -77,14 +80,24 @@ export class MongoDBWorkstationService implements IWorkstationService {
     return WorkstationModel.find({...filters, sector: sectorId}).populate([
       'employee',
       'sector',
+      'job',
     ])
   }
 
+  async fetchAllByJob(sectorId: string, jobId: string): Promise<Workstation[]> {
+    await this.connect()
+    return WorkstationModel.find({sector: sectorId, job: jobId}).populate([
+      'employee',
+      'sector',
+      'job',
+    ])
+  }
   async deleteById(id: string, sectorId: string): Promise<void> {
     await this.connect()
     await WorkstationModel.deleteOne({_id: id, sector: sectorId}).populate([
       'employee',
       'sector',
+      'job',
     ])
   }
 }
