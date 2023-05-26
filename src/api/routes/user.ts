@@ -47,7 +47,14 @@ UserRoutes.post(
 
 UserRoutes.post('/logout', async (request, response) => {
   try {
-    return response.clearCookie(AUTH_COOKIE_NAME).status(200).json()
+    return response
+      .clearCookie(AUTH_COOKIE_NAME, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
+      .status(200)
+      .json()
   } catch (error: any) {
     return response.status(400).json({
       message: error.message || 'Credenciais inváliadas',
